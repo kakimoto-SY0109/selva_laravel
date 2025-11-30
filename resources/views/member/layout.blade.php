@@ -57,10 +57,13 @@
             background-color: #45a049;
         }
         .container {
+            /* max-width: 1200px; */
             max-width: 1200px;
-            margin: 50px auto;
+            /* margin: 50px auto; */
+            margin: 40px auto;
             background-color: white;
-            padding: 40px;
+            /* padding: 40px; */
+            padding: 30px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
@@ -151,16 +154,26 @@
             margin-top: 5px;
             font-weight: normal;
         }
-        @media (max-width: 480px) {
+        /* @media (max-width: 480px) { */
+        @media (max-width: 768px) {
             .container { 
                 margin: 30px 16px;
                 width: calc(100% - 32px);
+                padding: 20px;
             }
             .header-buttons a,
             .header-buttons button {
                 padding: 10px 18px;
                 font-size: 14px;
             }
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .image-preview img {
+            max-width: 100%;
+            height: auto;
         }
     </style>
 </head>
