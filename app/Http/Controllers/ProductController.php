@@ -105,7 +105,7 @@ class ProductController extends Controller
 
     public function top()
     {
-        return view('top'); // 既存トップビュー
+        return view('top');
     }
     public function index(Request $request)
     {
@@ -140,4 +140,13 @@ class ProductController extends Controller
         return view('products.index', compact('products', 'categories', 'categoryId', 'subcategoryId', 'keyword'));
     }
 
+    public function show($id)
+    {
+        $product = Product::with(['category', 'subcategory'])->findOrFail($id);
+        
+        // 一覧ページのページ番号を保持
+        $page = request()->query('page', 1);
+        
+        return view('products.show', compact('product', 'page'));
+    }
 }

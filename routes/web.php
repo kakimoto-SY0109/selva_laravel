@@ -52,7 +52,8 @@ Route::post('/member/password/reset', [PasswordResetController::class, 'resetPas
     ->name('member.password.update');
 
 // 商品一覧（認証不要）
-Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+Route::get('/products', [ProductController::class, 'index'])
+    ->name('products.index');
 
 // 商品登録関連（認証必須）
 Route::middleware('auth:member')->group(function () {
@@ -75,5 +76,10 @@ Route::middleware('auth:member')->group(function () {
         ->name('products.upload.image');
     
     // マイページ
-    Route::get('/mypage', [MypageController::class, 'index'])->name('mypage');
+    Route::get('/mypage', [MypageController::class, 'index'])
+        ->name('mypage');
 });
+
+// 商品詳細
+Route::get('/products/{id}', [ProductController::class, 'show'])
+    ->name('products.show');
