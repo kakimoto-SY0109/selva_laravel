@@ -109,12 +109,11 @@ class ProductController extends Controller
     }
     public function index(Request $request)
     {
-        // 検索条件取得
         $categoryId     = $request->input('category_id');
         $subcategoryId  = $request->input('subcategory_id');
         $keyword        = $request->input('keyword');
 
-        // EloquentでAND検索（縦 AND、カテゴリ—サブカテゴリ AND）
+        // AND検索
         $query = Product::query()
             ->with(['category', 'subcategory'])
             ->orderByDesc('id');
@@ -135,7 +134,7 @@ class ProductController extends Controller
         // 1ページ10件
         $products = $query->paginate(10)->appends($request->query());
         
-        // カテゴリ初期リスト
+        // カテゴリリスト
         $categories = ProductCategory::all();
         
         return view('products.index', compact('products', 'categories', 'categoryId', 'subcategoryId', 'keyword'));
