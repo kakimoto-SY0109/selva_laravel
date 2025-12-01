@@ -78,14 +78,21 @@
             <div class="image-preview">
                 <img id="preview_{{ $i }}" src="{{ old('image_'.$i) ? asset('storage/' . old('image_'.$i)) : '' }}">
             </div>
+            </div>
         </div>
-    </div>
-@endfor  
+        @endfor
         <div class="button-group">
             <button type="submit" id="submit-btn">確認画面へ</button>
-        </div>
+        </div>  
+        @php
+            $from = $from ?? session('from');
+        @endphp
         <div class="link-group">
-            <a href="{{ route('top') }}">トップに戻る</a>
+            @if ($from === 'list')
+                <a href="{{ route('products.index') }}">商品一覧に戻る</a>
+            @else
+                <a href="{{ route('top') }}">トップに戻る</a>
+            @endif
         </div>
     </form>
 </div>

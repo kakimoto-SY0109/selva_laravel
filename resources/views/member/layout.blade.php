@@ -187,8 +187,9 @@
                 @endauth
             </div>
             <div class="header-buttons">
+                <a href="{{ route('products.index') }}">商品一覧</a>
                 @auth('member')
-                    <a href="{{ route('products.create') }}">新規商品登録</a>
+                    <a href="{{ route('products.create', ['from' => 'top']) }}">新規商品登録</a>
                     <a href="{{ route('mypage') }}">マイページ</a>
                     <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                         @csrf

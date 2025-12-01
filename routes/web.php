@@ -36,54 +36,50 @@ Route::post('/member/complete', [MemberController::class, 'register'])
     ->name('member.complete');
 
 // パスワードリセット関連
-// リセット申請フォーム表示
 Route::get('/member/password/reset', [PasswordResetController::class, 'showResetRequestForm'])
     ->name('member.password.request');
 
-// リセットメール送信処理
 Route::post('/member/password/email', [PasswordResetController::class, 'sendResetLinkEmail'])
     ->name('member.password.email');
 
-// メール送信完了画面
 Route::get('/member/password/reset/sent', [PasswordResetController::class, 'showResetSent'])
     ->name('member.password.sent');
 
-// パスワード再設定フォーム表示
 Route::get('/member/password/reset/form', [PasswordResetController::class, 'showResetForm'])
     ->name('member.password.reset.form');
 
-// パスワード更新処理
 Route::post('/member/password/reset', [PasswordResetController::class, 'resetPassword'])
     ->name('member.password.update');
 
+// 商品一覧（認証不要）
+Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+
 // 商品登録関連（認証必須）
 Route::middleware('auth:member')->group(function () {
-    // 商品登録フォーム表示
     Route::get('/products/create', [ProductController::class, 'create'])
         ->name('products.create');
     
-    // 商品登録確認画面表示
     Route::post('/products/confirm', [ProductController::class, 'confirm'])
         ->name('products.confirm');
     
-    // 商品登録フォームに戻る
     Route::post('/products/back', [ProductController::class, 'back'])
         ->name('products.back');
     
-    // 商品登録処理
     Route::post('/products/store', [ProductController::class, 'store'])
         ->name('products.store');
     
-    // Ajax: サブカテゴリ取得
     Route::get('/products/subcategories/{category_id}', [ProductController::class, 'getSubcategories'])
         ->name('products.subcategories');
     
-    // Ajax: 画像アップロード
     Route::post('/products/upload-image', [ProductController::class, 'uploadImage'])
         ->name('products.upload.image');
+    
+    // マイページ
+    Route::get('/mypage', [MypageController::class, 'index'])->name('mypage');
 });
 
-Route::middleware('auth:member')->group(function () {
-    Route::get('/mypage', [MypageController::class, 'index'])->name('mypage');
-    Route::post('/logout', [MypageController::class, 'logout'])->name('logout');
-});
+// ★以下の重複部分を削除しました
+// Route::get('/products/create', ...
+// Route::post('/products/confirm', ...
+// Route::post('/products/store', ...
+// Route::get('/products/subcategories/{category_id}', ...

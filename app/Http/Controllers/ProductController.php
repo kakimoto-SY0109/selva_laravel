@@ -9,13 +9,19 @@ use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\ProductSubcategory;
 use App\Http\Requests\StoreProductRequest;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
     public function create(Request $request)
     {
         $categories = ProductCategory::all();
-        return view('products.create', compact('categories'));
+        $from = $request->input('from') ?? $request->session()->get('from');
+        if ($from) {
+            $request->session()->put('from', $from);
+        }
+        //return view('products.create', compact('categories'));
+        return view('products.create', compact('categories', 'from'));
     }
 
     public function confirm(StoreProductRequest $request)
@@ -26,10 +32,13 @@ class ProductController extends Controller
         $category = ProductCategory::find($validated['product_category_id']);
         $subcategory = ProductSubcategory::find($validated['product_subcategory_id']);
 
+        $from = $request->session()->get('from');
         return view('products.confirm', [
             'formData' => $validated,
             'categoryName' => $category->name ?? '',
             'subcategoryName' => $subcategory->name ?? '',
+            //追加
+            'from' => $from,
         ]);
     }
 
@@ -63,7 +72,8 @@ class ProductController extends Controller
 
             $request->session()->forget('product_form');
 
-            return redirect()->route('top')->with('success', '商品を登録しました');
+            //return redirect()->route('top')->with('success', '商品を登録しました');
+            return redirect()->route('products.index')->with('success', '商品を登録しました');
 
         } catch (\Exception $e) {
             Log::error('商品登録エラー: ' . $e->getMessage());
@@ -92,4 +102,43 @@ class ProductController extends Controller
             'url' => asset('storage/' . $path),
         ]);
     }
+
+    public function top()
+    {
+        return view('top'); // 既存トップビュー
+    }
+    public function index(Request $request)
+    {
+        // 検索条件取得
+        $categoryId     = $request->input('category_id');
+        $subcategoryId  = $request->input('subcategory_id');
+        $keyword        = $request->input('keyword');
+
+        // EloquentでAND検索（縦 AND、カテゴリ—サブカテゴリ AND）
+        $query = Product::query()
+            ->with(['category', 'subcategory'])
+            ->orderByDesc('id');
+
+        if (!empty($categoryId)) {
+            $query->where('product_category_id', $categoryId);
+        }
+        if (!empty($subcategoryId)) {
+            $query->where('product_subcategory_id', $subcategoryId);
+        }
+        if (!empty($keyword)) {
+            $query->where(function ($q) use ($keyword) {
+                $q->where('name', 'like', "%{$keyword}%")
+                  ->orWhere('product_content', 'like', "%{$keyword}%");
+            });
+        }
+        
+        // 1ページ10件
+        $products = $query->paginate(10)->appends($request->query());
+        
+        // カテゴリ初期リスト
+        $categories = ProductCategory::all();
+        
+        return view('products.index', compact('products', 'categories', 'categoryId', 'subcategoryId', 'keyword'));
+    }
+
 }

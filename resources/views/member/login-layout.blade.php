@@ -190,6 +190,7 @@
                 @endauth
             </div>
             <div class="header-buttons">
+                <a href="{{ route('products.index') }}">商品一覧</a>
                 @auth('member')
                     <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                         @csrf
