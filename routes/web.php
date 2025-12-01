@@ -79,6 +79,13 @@ Route::middleware('auth:member')->group(function () {
     // マイページ
     Route::get('/mypage', [MypageController::class, 'index'])
         ->name('mypage');
+    
+    // 退会
+    Route::get('/withdraw', [MypageController::class, 'showWithdraw'])
+        ->name('withdraw');
+
+    Route::post('/withdraw', [MypageController::class, 'withdraw'])
+        ->name('withdraw.post');   
 });
 
 // 商品詳細

@@ -49,6 +49,10 @@
             <div class="info-value security">セキュリティのため非表示</div>
         </div>
     </div>
+
+    <div class="button-group">
+        <a href="{{ route('withdraw') }}" class="btn btn-withdraw">退会</a>
+    </div>
 </div>
 @endsection
 
@@ -109,13 +113,9 @@
     }
     .button-group {
         text-align: center;
-        margin-bottom: 20px;
-    }
-    .button-group form {
-        display: inline-block;
-        width: 100%;
     }
     .btn {
+        display: inline-block;
         width: 100%;
         padding: 14px;
         border: none;
@@ -124,12 +124,14 @@
         font-size: 16px;
         font-weight: bold;
         transition: background-color 0.2s ease;
+        text-decoration: none;
+        text-align: center;
     }
-    .btn-logout {
+    .btn-withdraw {
         background-color: #f44336;
         color: white;
     }
-    .btn-logout:hover {
+    .btn-withdraw:hover {
         background-color: #d32f2f;
     }
     @media (max-width: 768px) {
