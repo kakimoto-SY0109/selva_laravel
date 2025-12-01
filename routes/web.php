@@ -5,6 +5,7 @@ use App\Http\Controllers\MemberController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\MyPageController;
 
 // トップページ
@@ -83,3 +84,25 @@ Route::middleware('auth:member')->group(function () {
 // 商品詳細
 Route::get('/products/{id}', [ProductController::class, 'show'])
     ->name('products.show');
+
+// 商品レビュー一覧(認証不要)
+Route::get('/products/{product_id}/reviews', [ReviewController::class, 'index'])
+    ->name('reviews.index');
+
+// 商品レビュー関連(認証必須)
+Route::middleware('auth:member')->group(function () {
+    Route::get('/products/{product_id}/reviews/create', [ReviewController::class, 'create'])
+        ->name('reviews.create');
+    
+    Route::post('/products/{product_id}/reviews/confirm', [ReviewController::class, 'confirm'])
+        ->name('reviews.confirm');
+    
+    Route::post('/products/{product_id}/reviews/back', [ReviewController::class, 'back'])
+        ->name('reviews.back');
+    
+    Route::post('/products/{product_id}/reviews/store', [ReviewController::class, 'store'])
+        ->name('reviews.store');
+    
+    Route::get('/products/{product_id}/reviews/complete', [ReviewController::class, 'complete'])
+        ->name('reviews.complete');
+});

@@ -33,6 +33,26 @@
     </div>
 
     <div class="detail-section">
+        <h2>総合評価</h2>
+        @if($product->average_rating > 0)
+            <div class="rating-display">
+                <div class="stars">
+                    @for($i = 1; $i <= 5; $i++)
+                        @if($i <= $product->average_rating)
+                            <span class="star filled">★</span>
+                        @else
+                            <span class="star empty">★</span>
+                        @endif
+                    @endfor
+                </div>
+                <span class="rating-number">{{ $product->average_rating }}</span>
+            </div>
+        @else
+            <p class="no-rating">評価なし</p>
+        @endif
+    </div>
+
+    <div class="detail-section">
         <h2>商品説明</h2>
         <p class="product_content">{!! nl2br(e($product->product_content)) !!}</p>
     </div>
@@ -40,6 +60,13 @@
     <div class="detail-section">
         <h2>最終更新日時</h2>
         <p>{{ $product->updated_at->format('Y-m-d H:i:s') }}</p>
+    </div>
+
+    <div class="review-actions">
+        <a href="{{ route('reviews.index', $product->id) }}" class="btn btn-review">レビューを見る</a>
+        @auth('member')
+            <a href="{{ route('reviews.create', $product->id) }}" class="btn btn-review-register">この商品についてのレビューを登録</a>
+        @endauth
     </div>
 
     <div class="link-group">
@@ -93,6 +120,34 @@
         white-space: pre-wrap;
         word-wrap: break-word;
     }
+    .rating-display {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+    .stars {
+        display: flex;
+        gap: 4px;
+    }
+    .star {
+        font-size: 32px;
+        line-height: 1;
+    }
+    .star.filled {
+        color: #FF9800;
+    }
+    .star.empty {
+        color: #ddd;
+    }
+    .rating-number {
+        font-size: 28px;
+        font-weight: bold;
+        color: #333;
+    }
+    .no-rating {
+        font-size: 18px;
+        color: #888;
+    }
     .image-gallery {
         display: flex;
         gap: 12px;
@@ -104,6 +159,37 @@
         object-fit: cover;
         border-radius: 6px;
         border: 1px solid #ddd;
+    }
+    .review-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+    .btn {
+        display: block;
+        padding: 14px;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 6px;
+        font-size: 16px;
+        font-weight: bold;
+        transition: background-color 0.2s ease;
+    }
+    .btn-review {
+        background-color: #2196F3;
+        color: white;
+    }
+    .btn-review:hover {
+        background-color: #1976D2;
+    }
+    .btn-review-register {
+        background-color: #4CAF50;
+        color: white;
+    }
+    .btn-review-register:hover {
+        background-color: #45a049;
     }
     .link-group {
         margin-top: 30px;

@@ -35,4 +35,23 @@ class Product extends Model
     {
         return $this->belongsTo(Member::class);
     }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    // 総合評価取得（小数点以下切り上げ）
+    public function getAverageRatingAttribute()
+    {
+        $average = $this->reviews()->avg('evaluation');
+        return $average ? ceil($average) : 0;
+    }
+
+    // レビュー件数取得
+    public function getReviewCountAttribute()
+    {
+        return $this->reviews()->count();
+    }
+
 }

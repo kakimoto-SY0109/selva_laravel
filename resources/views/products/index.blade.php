@@ -13,7 +13,7 @@
     
     <form method="get" action="{{ route('products.index') }}">
         <div class="form-group">
-            <label for="category_id">商品カテゴリ（大）</label>
+            <label for="category_id">商品カテゴリ(大)</label>
             <select name="category_id" id="category_id">
                 <option value="">選択してください</option>
                 @foreach ($categories as $cat)
@@ -25,7 +25,7 @@
         </div>
 
         <div class="form-group" id="subcategory-wrapper" style="display:none;">
-            <label for="subcategory_id">商品カテゴリ（小）</label>
+            <label for="subcategory_id">商品カテゴリ(小)</label>
             <select name="subcategory_id" id="subcategory_id">
                 <option value="">選択してください</option>
             </select>
@@ -61,6 +61,23 @@
                 <a href="{{ route('products.show', ['id' => $p->id, 'page' => $products->currentPage()]) }}" class="product-name-link">
                     <div class="product-name">{{ $p->name }}</div>
                 </a>
+                <div class="product-rating">
+                    総合評価: 
+                    @if($p->average_rating > 0)
+                        <span class="stars">
+                            @for($i = 1; $i <= 5; $i++)
+                                @if($i <= $p->average_rating)
+                                    <span class="star filled">★</span>
+                                @else
+                                    <span class="star empty">★</span>
+                                @endif
+                            @endfor
+                        </span>
+                        <span class="rating-number">{{ $p->average_rating }}</span>
+                    @else
+                        <span class="rating-value">評価なし</span>
+                    @endif
+                </div>
             </div>
             <div class="product-actions">
                 <a href="{{ route('products.show', ['id' => $p->id, 'page' => $products->currentPage()]) }}" class="detail-button">詳細</a>
@@ -218,16 +235,11 @@
         color: #666;
         margin-bottom: 4px;
     }
-    /*修正　product-name*/
     .product-name-link {
         font-weight: bold;
         font-size: 16px;
-    }
-    .pagination .page-item.active .page-link {
-        background-color: #888;
-        border-color: #888;
-        color: #fff;
-        font-weight: bold;
+        text-decoration: none;
+        color: #333;
     }
     .product-name-link:hover .product-name {
         color: #2196F3;
@@ -238,7 +250,35 @@
         font-size: 16px;
         cursor: pointer;
         transition: color 0.2s ease;
-    }.product-actions {
+        margin-bottom: 6px;
+    }
+    .product-rating {
+        font-size: 14px;
+        color: #666;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .stars {
+        display: inline-flex;
+        gap: 2px;
+    }
+    .star {
+        font-size: 18px;
+        line-height: 1;
+    }
+    .star.filled {
+        color: #FF9800;
+    }
+    .star.empty {
+        color: #ddd;
+    }
+    .rating-value {
+        font-weight: bold;
+        color: #FF9800;
+        font-size: 16px;
+    }
+    .product-actions {
         display: flex;
         align-items: center;
     }
@@ -407,7 +447,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     setTimeout(hideFlash, 10000);
 
-    // クリックでも消える
     document.addEventListener('DOMContentLoaded', function () {
         const flash = document.getElementById('flash-message');
         if (flash) {
