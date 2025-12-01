@@ -6,7 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReviewController;
-use App\Http\Controllers\MyPageController;
+use App\Http\Controllers\MypageController;
 
 // トップページ
 Route::get('/member/top', [AuthController::class, 'top'])
@@ -105,4 +105,5 @@ Route::middleware('auth:member')->group(function () {
     
     Route::get('/products/{product_id}/reviews/complete', [ReviewController::class, 'complete'])
         ->name('reviews.complete');
+    
 });

@@ -187,18 +187,22 @@
                 @endauth
             </div>
             <div class="header-buttons">
-                <a href="{{ route('products.index') }}">商品一覧</a>
-                @auth('member')
-                    <a href="{{ route('products.create', ['from' => 'top']) }}">新規商品登録</a>
-                    <a href="{{ route('mypage') }}">マイページ</a>
-                    <form action="{{ route('logout') }}" method="POST" style="display: inline;">
-                        @csrf
-                        <button type="submit">ログアウト</button>
-                    </form>
+                @hasSection('header_buttons')
+                    @yield('header_buttons')
                 @else
-                    <a href="{{ route('login') }}">ログイン</a>
-                    <a href="{{ route('member.register') }}">新規会員登録</a>
-                @endauth
+                    <a href="{{ route('products.index') }}">商品一覧</a>
+                    @auth('member')
+                        <a href="{{ route('products.create', ['from' => 'top']) }}">新規商品登録</a>
+                        <a href="{{ route('mypage') }}">マイページ</a>
+                        <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                            @csrf
+                            <button type="submit">ログアウト</button>
+                        </form>
+                    @else
+                        <a href="{{ route('login') }}">ログイン</a>
+                        <a href="{{ route('member.register') }}">新規会員登録</a>
+                    @endauth
+                @endif
             </div>
         </div>
     </header>
