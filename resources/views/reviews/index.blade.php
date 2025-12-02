@@ -79,9 +79,9 @@
 
         <nav class="pagination-wrapper">
             @if ($reviews->onFirstPage() === false)
-                <a class="pagination-arrow" href="{{ $reviews->previousPageUrl() }}">前へ</a>
+                <a class="pagination-arrow" href="{{ $reviews->previousPageUrl() }}">‹</a>
             @else
-                <span class="pagination-arrow disabled">前へ</span>
+                <span class="pagination-arrow disabled">‹</span>
             @endif
 
             <ul class="pagination-list">
@@ -93,9 +93,9 @@
             </ul>
 
             @if ($current < $last)
-                <a class="pagination-arrow" href="{{ $reviews->nextPageUrl() }}">次へ</a>
+                <a class="pagination-arrow" href="{{ $reviews->nextPageUrl() }}">›</a>
             @else
-                <span class="pagination-arrow disabled">次へ</span>
+                <span class="pagination-arrow disabled">›</span>
             @endif
         </nav>
     @endif
