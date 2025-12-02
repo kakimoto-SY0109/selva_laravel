@@ -60,6 +60,7 @@
         <a href="{{ route('profile.edit') }}" class="btn btn-action">会員情報変更</a>
         <a href="{{ route('email.edit') }}" class="btn btn-action">メールアドレス変更</a>
         <a href="{{ route('password.edit') }}" class="btn btn-action">パスワード変更</a>
+        <a href="{{ route('my-reviews') }}" class="btn btn-action">商品レビュー管理</a>
     </div>
 
     <div class="button-group">

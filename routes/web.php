@@ -10,6 +10,7 @@ use App\Http\Controllers\EmailController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\MypageController;
+use App\Http\Controllers\MyReviewController;
 
 // トップページ
 Route::get('/member/top', [AuthController::class, 'top'])
@@ -149,4 +150,24 @@ Route::middleware('auth:member')->group(function () {
     Route::get('/products/{product_id}/reviews/complete', [ReviewController::class, 'complete'])
         ->name('reviews.complete');
     
+    Route::get('/my-reviews', [MyReviewController::class, 'index'])
+        ->name('my-reviews');
+
+    Route::get('/my-reviews/{id}/edit', [MyReviewController::class, 'edit'])
+        ->name('my-reviews.edit');
+
+    Route::post('/my-reviews/{id}/confirm', [MyReviewController::class, 'confirm'])
+        ->name('my-reviews.confirm');
+
+    Route::post('/my-reviews/{id}/back', [MyReviewController::class, 'back'])
+        ->name('my-reviews.back');
+
+    Route::post('/my-reviews/{id}/update', [MyReviewController::class, 'update'])
+        ->name('my-reviews.update');
+
+    Route::get('/my-reviews/{id}/delete', [MyReviewController::class, 'delete'])
+        ->name('my-reviews.delete');
+
+    Route::delete('/my-reviews/{id}', [MyReviewController::class, 'destroy'])
+        ->name('my-reviews.destroy');
 });
