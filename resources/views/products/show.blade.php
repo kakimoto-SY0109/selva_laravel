@@ -16,7 +16,10 @@
             @if($product->image_3)
                 <img src="{{ asset('storage/'.$product->image_3) }}" alt="商品画像3">
             @endif
-            @if(!$product->image_1 && !$product->image_2 && !$product->image_3)
+            @if($product->image_4)
+                <img src="{{ asset('storage/'.$product->image_4) }}" alt="商品画像4">
+            @endif
+            @if(!$product->image_1 && !$product->image_2 && !$product->image_3 && !$product->image_4)
                 <img src="{{ asset('images/no-image.png') }}" alt="画像なし">
             @endif
         </div>
