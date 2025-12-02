@@ -4,6 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PasswordResetController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PasswordController;
+use App\Http\Controllers\EmailController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\MypageController;
@@ -80,6 +83,39 @@ Route::middleware('auth:member')->group(function () {
     Route::get('/mypage', [MypageController::class, 'index'])
         ->name('mypage');
     
+    // 会員情報変更
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])
+        ->name('profile.edit');
+
+    Route::post('/profile/confirm', [ProfileController::class, 'confirm'])
+        ->name('profile.confirm');
+
+    Route::post('/profile/back', [ProfileController::class, 'back'])
+        ->name('profile.back');
+
+    Route::post('/profile/update', [ProfileController::class, 'update'])
+        ->name('profile.update');
+    
+    // パスワード変更
+    Route::get('/password/edit', [PasswordController::class, 'edit'])
+        ->name('password.edit');
+
+    Route::post('/password/update', [PasswordController::class, 'update'])
+        ->name('password.update');
+    
+    // メールアドレス変更
+    Route::get('/email/edit', [EmailController::class, 'edit'])
+        ->name('email.edit');
+
+    Route::post('/email/send', [EmailController::class, 'send'])
+        ->name('email.send');
+
+    Route::get('/email/verify', [EmailController::class, 'verify'])
+        ->name('email.verify');
+
+    Route::post('/email/complete', [EmailController::class, 'complete'])
+        ->name('email.complete');
+
     // 退会
     Route::get('/withdraw', [MypageController::class, 'showWithdraw'])
         ->name('withdraw');

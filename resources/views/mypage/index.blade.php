@@ -12,6 +12,12 @@
 @section('content')
 <div class="mypage-container">
     <h1>マイページ</h1>
+
+    @if (session('success'))
+        <div class="success-message">
+            {{ session('success') }}
+        </div>
+    @endif
     
     <div class="member-info-section">
         <h2>会員情報</h2>
@@ -50,6 +56,12 @@
         </div>
     </div>
 
+    <div class="action-buttons">
+        <a href="{{ route('profile.edit') }}" class="btn btn-action">会員情報変更</a>
+        <a href="{{ route('email.edit') }}" class="btn btn-action">メールアドレス変更</a>
+        <a href="{{ route('password.edit') }}" class="btn btn-action">パスワード変更</a>
+    </div>
+
     <div class="button-group">
         <a href="{{ route('withdraw') }}" class="btn btn-withdraw">退会</a>
     </div>
@@ -71,6 +83,15 @@
         margin-bottom: 30px;
         font-size: 30px;
         color: #333;
+    }
+    .success-message {
+        background-color: #d4edda;
+        border: 1px solid #c3e6cb;
+        color: #155724;
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 6px;
+        text-align: center;
     }
     .member-info-section {
         background-color: #f9f9f9;
@@ -111,8 +132,15 @@
         color: #888;
         font-style: italic;
     }
+    .action-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 20px;
+    }
     .button-group {
         text-align: center;
+        margin-top: 10px;
     }
     .btn {
         display: inline-block;
@@ -126,6 +154,13 @@
         transition: background-color 0.2s ease;
         text-decoration: none;
         text-align: center;
+    }
+    .btn-action {
+        background-color: #2196F3;
+        color: white;
+    }
+    .btn-action:hover {
+        background-color: #1976D2;
     }
     .btn-withdraw {
         background-color: #f44336;
