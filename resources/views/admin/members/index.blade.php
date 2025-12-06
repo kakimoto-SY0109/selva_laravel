@@ -4,6 +4,10 @@
 <div class="container">
     <h1>会員一覧</h1>
 
+    <div style="text-align: right; margin-bottom: 20px;">
+        <a href="{{ route('admin.members.create') }}" class="btn-add">会員登録</a>
+    </div>
+
     {{-- 検索フォーム --}}
     <div class="search-box">
         <h2>会員検索</h2>
@@ -74,6 +78,7 @@
                             @endif
                         </a>
                     </th>
+                    <th class="col-action">編集</th>
                 </tr>
             </thead>
             <tbody>
@@ -84,6 +89,9 @@
                     <td class="col-gender">{{ $member->gender == 1 ? '男性' : '女性' }}</td>
                     <td class="col-email">{{ $member->email }}</td>
                     <td class="col-date">{{ $member->created_at->format('Y-m-d H:i') }}</td>
+                    <td class="col-action">
+                        <a href="{{ route('admin.members.edit', $member->id) }}" class="btn-edit">編集</a>
+                    </td>
                 </tr>
                 @empty
                 <tr>
@@ -378,6 +386,42 @@
     text-decoration: underline;
 }
 
+.btn-add {
+    background-color: #5dade2;
+    color: white;
+    padding: 10px 30px;
+    border-radius: 4px;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.btn-add:hover {
+    background-color: #3498db;
+}
+
+.col-action {
+    width: 100px;
+    text-align: center;
+}
+
+.btn-edit {
+    background-color: #5dade2;
+    color: white;
+    padding: 6px 20px;
+    border-radius: 4px;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 13px;
+    transition: background-color 0.3s;
+}
+
+.btn-edit:hover {
+    background-color: #3498db;
+}
+
 @media (max-width: 768px) {
     .search-row {
         grid-template-columns: 1fr;
@@ -388,6 +432,42 @@
         border-radius: 0;
         margin-left: -30px;
         margin-right: -30px;
+        width: calc(100% + 60px);
+    }
+    
+    .member-table {
+        font-size: 12px;
+    }
+    
+    .member-table th,
+    .member-table td {
+        padding: 10px 8px;
+        white-space: nowrap;
+    }
+    
+    .col-name,
+    .col-email {
+        min-width: 150px;
+    }
+    
+    .btn-edit {
+        padding: 4px 12px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.5em;
+    }
+    
+    .search-box {
+        padding: 15px;
+    }
+    
+    .btn-add {
+        padding: 8px 20px;
+        font-size: 13px;
     }
 }
 </style>

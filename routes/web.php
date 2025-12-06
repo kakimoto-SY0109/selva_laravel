@@ -188,4 +188,25 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // 会員一覧
     Route::get('/members', [AdminMemberController::class, 'index'])
         ->name('members.index');
+
+    // 会員登録
+    Route::get('/members/create', [AdminMemberController::class, 'create'])
+        ->name('members.create');
+    
+    // 会員編集
+    Route::get('/members/{id}/edit', [AdminMemberController::class, 'edit'])
+        ->name('members.edit');
+    
+    // 確認画面
+    Route::post('/members/confirm', [AdminMemberController::class, 'confirm'])
+        ->name('members.confirm');
+    
+    Route::post('/members/back', [AdminMemberController::class, 'back'])
+        ->name('members.back');
+    
+    Route::post('/members/store', [AdminMemberController::class, 'store'])
+        ->name('members.store');
+    
+    Route::post('/members/update', [AdminMemberController::class, 'update'])
+        ->name('members.update');
 });
