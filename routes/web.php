@@ -12,6 +12,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\MypageController;
 use App\Http\Controllers\MyReviewController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminMemberController;
 
 // トップページ
 Route::get('/member/top', [AuthController::class, 'top'])
@@ -183,4 +184,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
         ->name('top');
     Route::post('/logout', [AdminController::class, 'logout'])
         ->name('logout');
+
+    // 会員一覧
+    Route::get('/members', [AdminMemberController::class, 'index'])
+        ->name('members.index');
 });

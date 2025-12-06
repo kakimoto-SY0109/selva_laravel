@@ -32,8 +32,6 @@
             align-items: center;
         }
         .welcome-message {
-            font-size: 24px;
-            font-weight: bold;
             flex: 1;
         }
         .site-name {
@@ -52,7 +50,7 @@
         }
         .header-buttons a,
         .header-buttons button {
-            background-color: #999999;
+            background-color: #a0a0a0;
             color: white;
             padding: 12px 30px;
             text-decoration: none;
@@ -63,7 +61,7 @@
         }
         .header-buttons a:hover,
         .header-buttons button:hover {
-            background-color: #7a7a7a;
+            background-color: #909090;
         }
         .container {
             max-width: 1200px;
@@ -107,7 +105,7 @@
         }
         input:focus {
             outline: none;
-            border-color: #888;
+            border-color: #5dade2;
         }
         .button-group {
             margin-top: 30px;
@@ -118,7 +116,7 @@
         button,
         .btn {
             width: 100%;
-            background-color: #999999;
+            background-color: #5dade2;
             color: white;
             padding: 12px;
             border: none;
@@ -131,7 +129,7 @@
         }
         button:hover,
         .btn:hover {
-            background-color: #7a7a7a;
+            background-color: #3498db;
         }
         @media (max-width: 768px) {
             .container { 
@@ -158,6 +156,7 @@
             </div>
             <div class="header-buttons">
                 @auth('admin')
+                    <a href="{{ route('admin.members.index') }}">会員一覧</a>
                     <form action="{{ route('admin.logout') }}" method="POST" style="display: inline;">
                         @csrf
                         <button type="submit">ログアウト</button>
