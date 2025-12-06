@@ -11,6 +11,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\MypageController;
 use App\Http\Controllers\MyReviewController;
+use App\Http\Controllers\AdminController;
 
 // トップページ
 Route::get('/member/top', [AuthController::class, 'top'])
@@ -170,4 +171,16 @@ Route::middleware('auth:member')->group(function () {
 
     Route::delete('/my-reviews/{id}', [MyReviewController::class, 'destroy'])
         ->name('my-reviews.destroy');
+});
+
+// 管理者関連ルート
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/login', [AdminController::class, 'showLogin'])
+        ->name('login');
+    Route::post('/login', [AdminController::class, 'login'])
+        ->name('login.post');
+    Route::get('/top', [AdminController::class, 'top'])
+        ->name('top');
+    Route::post('/logout', [AdminController::class, 'logout'])
+        ->name('logout');
 });
