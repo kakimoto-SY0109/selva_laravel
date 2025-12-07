@@ -192,6 +192,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // 会員登録
     Route::get('/members/create', [AdminMemberController::class, 'create'])
         ->name('members.create');
+
+    // 会員詳細（追加）
+    Route::get('/members/{id}', [AdminMemberController::class, 'show'])
+        ->name('members.show');
     
     // 会員編集
     Route::get('/members/{id}/edit', [AdminMemberController::class, 'edit'])
@@ -209,4 +213,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     
     Route::post('/members/update', [AdminMemberController::class, 'update'])
         ->name('members.update');
+
+    Route::delete('/members/{id}', [AdminMemberController::class, 'destroy'])
+        ->name('members.destroy');
 });

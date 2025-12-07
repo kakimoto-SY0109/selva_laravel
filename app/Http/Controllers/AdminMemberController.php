@@ -21,7 +21,6 @@ class AdminMemberController extends Controller
 
         $query = Member::query()->whereNull('deleted_at');
 
-        // ID検索
         if ($request->filled('id')) {
             $query->where('id', $request->id);
         }
@@ -75,6 +74,25 @@ class AdminMemberController extends Controller
         $member = null;
 
         return view('admin.members.form', compact('genders', 'isEdit', 'member'));
+    }
+
+    /**
+     * 会員詳細表示
+     */
+    public function show($id)
+    {
+        if (!Auth::guard('admin')->check()) {
+            return redirect()->route('admin.login');
+        }
+
+        $member = Member::findOrFail($id);
+
+        $genders = [
+            1 => '男性',
+            2 => '女性',
+        ];
+
+        return view('admin.members.show', compact('member', 'genders'));
     }
 
     /**
@@ -279,6 +297,35 @@ class AdminMemberController extends Controller
             return redirect()->route('admin.members.edit', $formData['member_id'])
                 ->withInput()
                 ->withErrors(['error' => '更新処理中にエラーが発生しました。']);
+        }
+    }
+
+    /**
+     * 会員削除（ソフトデリート）
+     */
+    public function destroy($id)
+    {
+        if (!Auth::guard('admin')->check()) {
+            return redirect()->route('admin.login');
+        }
+
+        try {
+            $member = Member::findOrFail($id);
+
+            $member->delete();
+
+            // その会員に紐づく商品レビューもソフトデリート
+            \DB::table('reviews')
+                ->where('member_id', $id)
+                ->whereNull('deleted_at')
+                ->update(['deleted_at' => now()]);
+
+            return redirect()->route('admin.members.index')
+                ->with('success', '会員を削除しました');
+
+        } catch (\Exception $e) {
+            return redirect()->route('admin.members.index')
+                ->with('error', '削除処理中にエラーが発生しました');
         }
     }
 }

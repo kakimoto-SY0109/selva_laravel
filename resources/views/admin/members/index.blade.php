@@ -90,12 +90,13 @@
                     <td class="col-email">{{ $member->email }}</td>
                     <td class="col-date">{{ $member->created_at->format('Y-m-d H:i') }}</td>
                     <td class="col-action">
+                        <a href="{{ route('admin.members.show', $member->id) }}" class="btn-detail">詳細</a>
                         <a href="{{ route('admin.members.edit', $member->id) }}" class="btn-edit">編集</a>
                     </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="5" class="no-data">該当する会員が見つかりませんでした</td>
+                    <td colspan="6" class="no-data">該当する会員が見つかりませんでした</td>
                 </tr>
                 @endforelse
             </tbody>
@@ -410,7 +411,23 @@
 .btn-edit {
     background-color: #5dade2;
     color: white;
-    padding: 6px 20px;
+    padding: 6px 18px;
+    border-radius: 4px;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 13px;
+    margin: 4px;
+    transition: background-color 0.3s;
+}
+
+.btn-edit:hover {
+    background-color: #3498db;
+}
+
+.btn-detail {
+    background-color: #95a5a6;
+    color: white;
+    padding: 6px 18px;
     border-radius: 4px;
     text-decoration: none;
     display: inline-block;
@@ -418,8 +435,8 @@
     transition: background-color 0.3s;
 }
 
-.btn-edit:hover {
-    background-color: #3498db;
+.btn-detail:hover {
+    background-color: #7f8c8d;
 }
 
 @media (max-width: 768px) {
@@ -450,7 +467,8 @@
         min-width: 150px;
     }
     
-    .btn-edit {
+    .btn-edit,
+    .btn-detail {
         padding: 4px 12px;
         font-size: 12px;
     }
