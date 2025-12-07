@@ -148,13 +148,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const addBtn = document.getElementById('addSubcategory');
     const maxSubcategories = 10;
 
-    // 初期表示時に削除ボタンの表示か非表示
     updateRemoveButtons();
+
+    // 初期表示時に10個以上なら追加ボタンを非表示
+    if (container.querySelectorAll('.subcategory-row').length >= maxSubcategories) {
+        addBtn.style.display = 'none';
+    }
 
     addBtn.addEventListener('click', function() {
         const rows = container.querySelectorAll('.subcategory-row');
         if (rows.length >= maxSubcategories) {
-            alert('商品小カテゴリは10個までです。');
+            addBtn.style.display = 'none';
             return;
         }
 
@@ -166,12 +170,19 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
         container.appendChild(newRow);
         updateRemoveButtons();
+
+        if (container.querySelectorAll('.subcategory-row').length >= maxSubcategories) {
+            addBtn.style.display = 'none';
+        }
     });
 });
 
 function removeSubcategory(btn) {
     btn.closest('.subcategory-row').remove();
     updateRemoveButtons();
+
+    const addBtn = document.getElementById('addSubcategory');
+    addBtn.style.display = 'inline-block';
 }
 
 function updateRemoveButtons() {
@@ -187,5 +198,15 @@ function updateRemoveButtons() {
         }
     });
 }
+
+document.getElementById('category-form').addEventListener('submit', function(e) {
+    const submitButton = this.querySelector('button[type="submit"]');
+    if (submitButton.disabled) {
+        e.preventDefault();
+        return false;
+    }
+    submitButton.disabled = true;
+    submitButton.textContent = '処理中...';
+});
 </script>
 @endsection

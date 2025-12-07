@@ -239,4 +239,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     Route::post('/product-categories/update', [AdminProductCategoryController::class, 'update'])
         ->name('product_categories.update');
+
+    // 商品カテゴリ詳細
+    Route::get('/product-categories/{id}', [AdminProductCategoryController::class, 'show'])
+        ->name('product_categories.show');
+
+    // 商品カテゴリ削除
+    Route::delete('/product-categories/{id}', [AdminProductCategoryController::class, 'destroy'])
+        ->name('product_categories.destroy');
 });

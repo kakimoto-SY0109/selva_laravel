@@ -189,4 +189,35 @@ class AdminProductCategoryController extends Controller
                 ->with('error', '更新処理中にエラーが発生しました。');
         }
     }
+
+    /**
+     * 詳細画面表示
+    */
+    public function show($id)
+    {
+        $category = ProductCategory::with('subcategories')->findOrFail($id);
+        return view('admin.product_categories.show', compact('category'));
+    }
+
+    /**
+     * 削除処理
+    */
+    public function destroy($id)
+    {
+        try {
+            DB::transaction(function () use ($id) {
+                $category = ProductCategory::findOrFail($id);
+                // サブカテゴリ
+                ProductSubcategory::where('product_category_id', $id)->delete();
+                // カテゴリ
+                $category->delete();
+            });
+
+            return redirect()->route('admin.product_categories.index')
+                ->with('success', '商品カテゴリを削除しました。');
+        } catch (\Exception $e) {
+            return redirect()->route('admin.product_categories.index')
+                ->with('error', '削除処理中にエラーが発生しました。');
+            }
+    }
 }

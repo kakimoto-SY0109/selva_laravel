@@ -1,372 +1,487 @@
 @extends('admin.layout')
-
 @section('title', '商品カテゴリ一覧')
-
 @section('content')
-<div class="admin-container">
+<div class="container">
     <h1>商品カテゴリ一覧</h1>
 
     @if (session('success'))
-    <div class="flash-message">
-        {{ session('success') }}
-    </div>
+        <div class="flash-message">{{ session('success') }}</div>
     @endif
 
     @if (session('error'))
-    <div class="error-message">
-        {{ session('error') }}
-    </div>
+        <div class="error-messages">{{ session('error') }}</div>
     @endif
 
+    <div style="text-align: right; margin-bottom: 20px;">
+        <a href="{{ route('admin.product_categories.create') }}" class="btn-add">商品カテゴリ登録</a>
+    </div>
+
     {{-- 検索フォーム --}}
-    <form method="get" action="{{ route('admin.product_categories.index') }}" class="search-form">
-        <div class="form-row">
-            <div class="form-group">
-                <label for="id">ID</label>
-                <input type="text" name="id" id="id" value="{{ $id }}" placeholder="IDで検索">
+    <div class="search-box">
+        <h2>商品カテゴリ検索</h2>
+        <form method="GET" action="{{ route('admin.product_categories.index') }}">
+            <div class="search-row">
+                <div class="search-item search-id">
+                    <label>ID</label>
+                    <input type="text" name="id" value="{{ $id }}" placeholder="ID">
+                </div>
+                
+                <div class="search-item search-keyword">
+                    <label>フリーワード</label>
+                    <input type="text" name="freeword" value="{{ $freeword }}" placeholder="カテゴリ名・サブカテゴリ名">
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="freeword">フリーワード</label>
-                <input type="text" name="freeword" id="freeword" value="{{ $freeword }}" placeholder="カテゴリ名・サブカテゴリ名">
+            <input type="hidden" name="sort" value="{{ $sortColumn }}">
+            <input type="hidden" name="direction" value="{{ $sortDirection }}">
+
+            <div class="search-buttons">
+                <button type="submit" class="btn-search">検索する</button>
             </div>
-        </div>
-
-        <div class="button-group">
-            <button type="submit" class="btn btn-primary">検索する</button>
-        </div>
-    </form>
-
-    <div class="link-group">
-        <a href="{{ route('admin.product_categories.create') }}">商品カテゴリ登録</a>
-        <span class="separator">｜</span>
-        <a href="{{ route('admin.top') }}">トップに戻る</a>
+        </form>
     </div>
 
     {{-- 一覧テーブル --}}
-    <table class="data-table">
-        <thead>
-            <tr>
-                <th class="sortable">
-                    ID
-                    <a href="{{ route('admin.product_categories.index', array_merge(request()->query(), ['sort' => 'id', 'direction' => ($sortColumn === 'id' && $sortDirection === 'asc') ? 'desc' : 'asc'])) }}" class="sort-link">
-                        @if($sortColumn === 'id')
-                            @if($sortDirection === 'asc')
-                                ▲
+    <div class="table-wrapper">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th class="col-id">
+                        ID
+                        <a href="{{ route('admin.product_categories.index', array_merge(request()->except(['sort', 'direction']), ['sort' => 'id', 'direction' => $sortColumn === 'id' && $sortDirection === 'asc' ? 'desc' : 'asc'])) }}" class="sort-btn">
+                            @if($sortColumn === 'id')
+                                {{ $sortDirection === 'asc' ? '▲' : '▼' }}
                             @else
                                 ▼
                             @endif
-                        @else
-                            ▼
-                        @endif
-                    </a>
-                </th>
-                <th>カテゴリ名</th>
-                <th>サブカテゴリ</th>
-                <th class="sortable">
-                    登録日時
-                    <a href="{{ route('admin.product_categories.index', array_merge(request()->query(), ['sort' => 'created_at', 'direction' => ($sortColumn === 'created_at' && $sortDirection === 'asc') ? 'desc' : 'asc'])) }}" class="sort-link">
-                        @if($sortColumn === 'created_at')
-                            @if($sortDirection === 'asc')
-                                ▲
+                        </a>
+                    </th>
+                    <th class="col-name">カテゴリ名</th>
+                    <th class="col-subcategory">サブカテゴリ</th>
+                    <th class="col-date">
+                        登録日時
+                        <a href="{{ route('admin.product_categories.index', array_merge(request()->except(['sort', 'direction']), ['sort' => 'created_at', 'direction' => $sortColumn === 'created_at' && $sortDirection === 'asc' ? 'desc' : 'asc'])) }}" class="sort-btn">
+                            @if($sortColumn === 'created_at')
+                                {{ $sortDirection === 'asc' ? '▲' : '▼' }}
                             @else
                                 ▼
                             @endif
-                        @else
-                            ▼
-                        @endif
-                    </a>
-                </th>
-                <th>編集</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse ($categories as $category)
-                <tr>
-                    <td>{{ $category->id }}</td>
-                    <td>{{ $category->name }}</td>
-                    <td>
-                        @if($category->subcategories->count() > 0)
-                            {{ $category->subcategories->pluck('name')->implode(', ') }}
-                        @else
-                            -
-                        @endif
-                    </td>
-                    <td>{{ $category->created_at ? $category->created_at->format('Y-m-d H:i:s') : '-' }}</td>
-                    <td>
-                        <a href="{{ route('admin.product_categories.edit', $category->id) }}" class="btn-edit">編集</a>
-                    </td>
+                        </a>
+                    </th>
+                    <th class="col-action">編集</th>
                 </tr>
-            @empty
-                <tr>
-                    <td colspan="5" class="no-data">該当するカテゴリはありません。</td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @forelse ($categories as $category)
+                    <tr>
+                        <td class="col-id">{{ $category->id }}</td>
+                        <td class="col-name">
+                            <a href="{{ route('admin.product_categories.show', $category->id) }}" class="category-link">
+                                {{ $category->name }}
+                            </a>
+                        </td>
+                        <td class="col-subcategory">
+                            @if($category->subcategories->count() > 0)
+                                {{ $category->subcategories->pluck('name')->implode(', ') }}
+                            @else
+                                -
+                            @endif
+                        </td>
+                        <td class="col-date">{{ $category->created_at ? $category->created_at->format('Y-m-d H:i') : '-' }}</td>
+                        <td class="col-action">
+                            <a href="{{ route('admin.product_categories.show', $category->id) }}" class="btn-detail">詳細</a>
+                            <a href="{{ route('admin.product_categories.edit', $category->id) }}" class="btn-edit">編集</a>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="5" class="no-data">該当するカテゴリが見つかりませんでした</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
 
     {{-- ページネーション --}}
-    @if ($categories->lastPage() > 1)
+    @if($categories->hasPages())
+    <div class="pagination-container">
+        @if($categories->onFirstPage())
+            <span class="pagination-disabled">‹</span>
+        @else
+            <a href="{{ $categories->previousPageUrl() }}" class="pagination-link">‹</a>
+        @endif
+
         @php
-            $current = $categories->currentPage();
-            $last = $categories->lastPage();
-            $start = max(1, $current - 1);
-            $end = min($last, $start + 2);
-            if (($end - $start) < 2) {
-                $start = max(1, $end - 2);
-            }
+            $currentPage = $categories->currentPage();
+            $lastPage = $categories->lastPage();
+            $startPage = floor(($currentPage - 1) / 3) * 3 + 1;
+            $endPage = min($startPage + 2, $lastPage);
         @endphp
 
-        <nav class="pagination-wrapper">
-            {{-- 前へボタン --}}
-            @if ($current > 1)
-                <a class="pagination-arrow" href="{{ $categories->url($current - 1) }}">
-                    ‹
-                </a>
+        @for($i = $startPage; $i <= $endPage; $i++)
+            @if($i == $currentPage)
+                <span class="pagination-current">{{ $i }}</span>
+            @else
+                <a href="{{ $categories->url($i) }}" class="pagination-link">{{ $i }}</a>
             @endif
+        @endfor
 
-            <ul class="pagination-list">
-                @for ($i = $start; $i <= $end; $i++)
-                    <li class="pagination-item {{ $i === $current ? 'active' : '' }}">
-                        <a class="pagination-link" href="{{ $categories->url($i) }}">
-                            {{ $i }}
-                        </a>
-                    </li>
-                @endfor
-            </ul>
-
-            {{-- 次へボタン --}}
-            @if ($current < $last)
-                <a class="pagination-arrow" href="{{ $categories->url($current + 1) }}">
-                    ›
-                </a>
-            @endif
-        </nav>
+        @if($categories->hasMorePages())
+            <a href="{{ $categories->nextPageUrl() }}" class="pagination-link">›</a>
+        @else
+            <span class="pagination-disabled">›</span>
+        @endif
+    </div>
     @endif
-</div>
-@endsection
 
-@section('scripts')
+    <div class="back-link">
+        <a href="{{ route('admin.top') }}">トップに戻る</a>
+    </div>
+</div>
+
 <style>
-    .admin-container {
-        max-width: 1000px;
-        margin: 40px auto;
-        padding: 30px;
-        background-color: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+.flash-message {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.error-messages {
+    background-color: #fee;
+    border: 1px solid #fcc;
+    color: #c33;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.search-box {
+    background: linear-gradient(to bottom, #fafafa, #f5f5f5);
+    padding: 25px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.search-box h2 {
+    font-size: 16px;
+    margin-bottom: 20px;
+    color: #333;
+    font-weight: bold;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #85d4f5;
+}
+
+.search-row {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 25px;
+    margin-bottom: 20px;
+    align-items: start;
+}
+
+.search-item label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #555;
+    font-size: 14px;
+}
+
+.search-item input[type="text"] {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+.search-item input[type="text"]:focus {
+    outline: none;
+    border-color: #5dade2;
+    box-shadow: 0 0 0 2px rgba(93, 173, 226, 0.1);
+}
+
+.search-buttons {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.btn-search {
+    background-color: #5dade2;
+    color: white;
+    padding: 10px 40px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    white-space: nowrap;
+}
+
+.btn-search:hover {
+    background-color: #3498db;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    margin-bottom: 25px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+}
+
+.data-table th {
+    background: linear-gradient(to bottom, #fafafa, #f5f5f5);
+    padding: 14px 12px;
+    text-align: left;
+    font-weight: bold;
+    color: #333;
+    font-size: 14px;
+    border-bottom: 2px solid #e0e0e0;
+    white-space: nowrap;
+}
+
+.data-table td {
+    padding: 14px 12px;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 14px;
+    color: #333;
+    vertical-align: middle;
+}
+
+.data-table tbody tr {
+    transition: background-color 0.2s;
+}
+
+.data-table tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+.data-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.col-id {
+    width: 80px;
+    text-align: center;
+}
+
+.col-name {
+    width: 150px;
+}
+
+.col-subcategory {
+    min-width: 250px;
+}
+
+.col-date {
+    width: 150px;
+}
+
+.col-action {
+    width: 120px;
+    text-align: center;
+}
+
+.category-link {
+    color: #333;
+    text-decoration: none;
+}
+
+.category-link:hover {
+    color: #5dade2;
+    text-decoration: underline;
+}
+
+.no-data {
+    text-align: center;
+    padding: 40px 20px !important;
+    color: #999;
+    font-size: 14px;
+}
+
+.sort-btn {
+    text-decoration: none;
+    color: #5dade2;
+    margin-left: 6px;
+    font-size: 11px;
+    font-weight: bold;
+    display: inline-block;
+    transition: color 0.3s;
+}
+
+.sort-btn:hover {
+    color: #3498db;
+}
+
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin: 30px 0;
+}
+
+.pagination-link {
+    padding: 8px 14px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #333;
+    background-color: white;
+    font-size: 18px;
+    transition: all 0.3s;
+}
+
+.pagination-link:hover {
+    background-color: #e8f5fc;
+    color: #5dade2;
+    border-color: #5dade2;
+}
+
+.pagination-current {
+    padding: 8px 14px;
+    border: 1px solid #5dade2;
+    border-radius: 4px;
+    background-color: #5dade2;
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.pagination-disabled {
+    padding: 8px 14px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    color: #ccc;
+    background-color: #fafafa;
+    font-size: 18px;
+}
+
+.back-link {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.back-link a {
+    color: #5dade2;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.back-link a:hover {
+    color: #3498db;
+    text-decoration: underline;
+}
+
+.btn-add {
+    background-color: #5dade2;
+    color: white;
+    padding: 10px 30px;
+    border-radius: 4px;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.btn-add:hover {
+    background-color: #3498db;
+}
+
+.btn-edit {
+    background-color: #5dade2;
+    color: white;
+    padding: 6px 18px;
+    border-radius: 4px;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 13px;
+    margin: 4px;
+    transition: background-color 0.3s;
+}
+
+.btn-edit:hover {
+    background-color: #3498db;
+}
+
+.btn-detail {
+    background-color: #95a5a6;
+    color: white;
+    padding: 6px 18px;
+    border-radius: 4px;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 13px;
+    transition: background-color 0.3s;
+}
+
+.btn-detail:hover {
+    background-color: #7f8c8d;
+}
+
+@media (max-width: 768px) {
+    .search-row {
+        grid-template-columns: 1fr;
+        gap: 15px;
     }
-    .admin-container h1 {
-        text-align: center;
-        margin-bottom: 30px;
-        color: #333;
+    
+    .table-wrapper {
+        border-radius: 0;
+        margin-left: -30px;
+        margin-right: -30px;
+        width: calc(100% + 60px);
     }
-    .search-form {
-        background-color: #f9f9f9;
-        padding: 20px;
-        border-radius: 6px;
-        margin-bottom: 20px;
-    }
-    .form-row {
-        display: flex;
-        gap: 20px;
-        flex-wrap: wrap;
-    }
-    .form-group {
-        flex: 1;
-        min-width: 200px;
-        margin-bottom: 15px;
-    }
-    .form-group label {
-        display: block;
-        margin-bottom: 5px;
-        font-weight: bold;
-        color: #555;
-    }
-    .form-group input[type="text"] {
-        width: 100%;
-        padding: 10px 12px;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        font-size: 14px;
-    }
-    .form-group input[type="text"]:focus {
-        border-color: #2196F3;
-        outline: none;
-        box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
-    }
-    .button-group {
-        text-align: center;
-        margin-top: 10px;
-    }
-    .btn {
-        padding: 10px 30px;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 14px;
-        font-weight: bold;
-        transition: background-color 0.2s ease;
-    }
-    .btn-primary {
-        background-color: #2196F3;
-        color: white;
-    }
-    .btn-primary:hover {
-        background-color: #1976D2;
-    }
-    .link-group {
-        text-align: center;
-        margin-bottom: 20px;
-    }
-    .link-group a {
-        color: #4CAF50;
-        text-decoration: none;
-        font-size: 14px;
-    }
-    .link-group a:hover {
-        text-decoration: underline;
-    }
+    
     .data-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-    }
-    .data-table th,
-    .data-table td {
-        padding: 12px 15px;
-        text-align: left;
-        border-bottom: 1px solid #ddd;
-        vertical-align: middle;
-    }
-    .data-table th {
-        background-color: #f5f5f5;
-        font-weight: bold;
-        color: #333;
-    }
-    .data-table th.sortable {
-        white-space: nowrap;
-    }
-    .sort-link {
-        color: #666;
-        text-decoration: none;
-        margin-left: 5px;
         font-size: 12px;
     }
-    .sort-link:hover {
-        color: #2196F3;
-    }
-    .data-table tbody tr:hover {
-        background-color: #f9f9f9;
-    }
-    .no-data {
-        text-align: center;
-        color: #888;
-        padding: 30px;
-    }
-    .pagination-wrapper {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
-        margin-top: 30px;
-    }
-    .pagination-list {
-        display: flex;
-        gap: 6px;
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
-    .pagination-item {
-        margin: 0;
-    }
-    .pagination-link {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-width: 40px;
-        height: 40px;
-        padding: 0 12px;
-        border: 1px solid #ddd;
-        border-radius: 6px;
-        background-color: #fff;
-        color: #333;
-        text-decoration: none;
-        font-size: 14px;
-        transition: all 0.2s ease;
-    }
-    .pagination-link:hover {
-        background-color: #f5f5f5;
-        border-color: #2196F3;
-        color: #2196F3;
-    }
-    .pagination-item.active .pagination-link {
-        background-color: #2196F3;
-        border-color: #2196F3;
-        color: #fff;
-        font-weight: bold;
-    }
-    .pagination-arrow {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0 15px;
-        height: 40px;
-        border: 1px solid #ddd;
-        border-radius: 6px;
-        background-color: #fff;
-        color: #333;
-        text-decoration: none;
-        font-size: 14px;
-        transition: all 0.2s ease;
-    }
-    .pagination-arrow:hover {
-        background-color: #2196F3;
-        border-color: #2196F3;
-        color: #fff;
-    }
-    .separator {
-        margin: 0 10px;
-        color: #ccc;
-    }
-    .btn-edit {
-        display: inline-block;
-        padding: 6px 15px;
-        background-color: #f39c12;
-        color: white;
-        text-decoration: none;
-        border-radius: 4px;
-        font-size: 13px;
+    
+    .data-table th,
+    .data-table td {
+        padding: 10px 8px;
         white-space: nowrap;
     }
-    .btn-edit:hover {
-        background-color: #e67e22;
+    
+    .btn-edit,
+    .btn-detail {
+        padding: 4px 12px;
+        font-size: 12px;
     }
-    .flash-message {
-        background-color: #d4edda;
-        border: 1px solid #c3e6cb;
-        color: #155724;
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.5em;
+    }
+    
+    .search-box {
         padding: 15px;
-        margin-bottom: 20px;
-        border-radius: 4px;
-        text-align: center;
     }
-    @media (max-width: 768px) {
-        .admin-container {
-            margin: 20px 16px;
-            padding: 20px;
-        }
-        .form-row {
-            flex-direction: column;
-        }
-        .data-table {
-            font-size: 13px;
-        }
-        .data-table th,
-        .data-table td {
-            padding: 10px 8px;
-        }
+    
+    .btn-add {
+        padding: 8px 20px;
+        font-size: 13px;
     }
+}
 </style>
 @endsection
