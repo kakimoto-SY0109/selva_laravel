@@ -157,6 +157,7 @@
             <div class="header-buttons">
                 @auth('admin')
                     <a href="{{ route('admin.members.index') }}">会員一覧</a>
+                    <a href="{{ route('admin.product_categories.index') }}">商品カテゴリ一覧</a>
                     <form action="{{ route('admin.logout') }}" method="POST" style="display: inline;">
                         @csrf
                         <button type="submit">ログアウト</button>
