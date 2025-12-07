@@ -218,7 +218,25 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::delete('/members/{id}', [AdminMemberController::class, 'destroy'])
         ->name('members.destroy');
 
-    // 商品カテゴリ一覧
+    // 商品カテゴリ関連
     Route::get('/product-categories', [AdminProductCategoryController::class, 'index'])
         ->name('product_categories.index');
+    
+    Route::get('/product-categories/create', [AdminProductCategoryController::class, 'create'])
+        ->name('product_categories.create');
+    
+    Route::get('/product-categories/{id}/edit', [AdminProductCategoryController::class, 'edit'])
+        ->name('product_categories.edit');
+
+    Route::post('/product-categories/confirm', [AdminProductCategoryController::class, 'confirm'])
+        ->name('product_categories.confirm');
+
+    Route::post('/product-categories/back', [AdminProductCategoryController::class, 'back'])
+        ->name('product_categories.back');
+
+    Route::post('/product-categories/store', [AdminProductCategoryController::class, 'store'])
+        ->name('product_categories.store');
+
+    Route::post('/product-categories/update', [AdminProductCategoryController::class, 'update'])
+        ->name('product_categories.update');
 });

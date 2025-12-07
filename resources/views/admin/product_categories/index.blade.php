@@ -6,6 +6,18 @@
 <div class="admin-container">
     <h1>商品カテゴリ一覧</h1>
 
+    @if (session('success'))
+    <div class="flash-message">
+        {{ session('success') }}
+    </div>
+    @endif
+
+    @if (session('error'))
+    <div class="error-message">
+        {{ session('error') }}
+    </div>
+    @endif
+
     {{-- 検索フォーム --}}
     <form method="get" action="{{ route('admin.product_categories.index') }}" class="search-form">
         <div class="form-row">
@@ -26,6 +38,8 @@
     </form>
 
     <div class="link-group">
+        <a href="{{ route('admin.product_categories.create') }}">商品カテゴリ登録</a>
+        <span class="separator">｜</span>
         <a href="{{ route('admin.top') }}">トップに戻る</a>
     </div>
 
@@ -63,6 +77,7 @@
                         @endif
                     </a>
                 </th>
+                <th>編集</th>
             </tr>
         </thead>
         <tbody>
@@ -78,10 +93,13 @@
                         @endif
                     </td>
                     <td>{{ $category->created_at ? $category->created_at->format('Y-m-d H:i:s') : '-' }}</td>
+                    <td>
+                        <a href="{{ route('admin.product_categories.edit', $category->id) }}" class="btn-edit">編集</a>
+                    </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="4" class="no-data">該当するカテゴリはありません。</td>
+                    <td colspan="5" class="no-data">該当するカテゴリはありません。</td>
                 </tr>
             @endforelse
         </tbody>
@@ -219,6 +237,7 @@
         padding: 12px 15px;
         text-align: left;
         border-bottom: 1px solid #ddd;
+        vertical-align: middle;
     }
     .data-table th {
         background-color: #f5f5f5;
@@ -306,6 +325,32 @@
         background-color: #2196F3;
         border-color: #2196F3;
         color: #fff;
+    }
+    .separator {
+        margin: 0 10px;
+        color: #ccc;
+    }
+    .btn-edit {
+        display: inline-block;
+        padding: 6px 15px;
+        background-color: #f39c12;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        font-size: 13px;
+        white-space: nowrap;
+    }
+    .btn-edit:hover {
+        background-color: #e67e22;
+    }
+    .flash-message {
+        background-color: #d4edda;
+        border: 1px solid #c3e6cb;
+        color: #155724;
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 4px;
+        text-align: center;
     }
     @media (max-width: 768px) {
         .admin-container {
