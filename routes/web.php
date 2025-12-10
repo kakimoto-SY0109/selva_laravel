@@ -14,6 +14,7 @@ use App\Http\Controllers\MyReviewController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminMemberController;
 use App\Http\Controllers\AdminProductCategoryController;
+use App\Http\Controllers\AdminProductController;
 
 // トップページ
 Route::get('/member/top', [AuthController::class, 'top'])
@@ -247,4 +248,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // 商品カテゴリ削除
     Route::delete('/product-categories/{id}', [AdminProductCategoryController::class, 'destroy'])
         ->name('product_categories.destroy');
+
+    // 商品一覧
+    Route::get('/products', [AdminProductController::class, 'index'])
+        ->name('products.index');
 });
