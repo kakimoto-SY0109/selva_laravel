@@ -101,11 +101,19 @@ class AdminProductCategoryController extends Controller
         $formData = $request->session()->get('product_category_form', []);
         $isEdit = !empty($formData['id']);
 
-        return view('admin.product_categories.form', [
-            'category' => null,
-            'isEdit' => $isEdit,
-            'formData' => $formData,
-        ]);
+        if ($isEdit) {
+            return redirect()->route('admin.product_categories.edit', $formData['id'])
+            ->withInput([
+                'category_name' => $formData['category_name'] ?? '',
+                'subcategories' => $formData['subcategories'] ?? [''],
+            ]);
+        } else {
+            return redirect()->route('admin.product_categories.create')
+            ->withInput([
+                'category_name' => $formData['category_name'] ?? '',
+                'subcategories' => $formData['subcategories'] ?? [''],
+            ]);
+        }
     }
 
     /**
