@@ -114,8 +114,14 @@
         @php
             $currentPage = $categories->currentPage();
             $lastPage = $categories->lastPage();
-            $startPage = floor(($currentPage - 1) / 3) * 3 + 1;
-            $endPage = min($startPage + 2, $lastPage);
+            
+            if ($currentPage < $lastPage) {
+                $startPage = max(1, $currentPage - 1);
+                $endPage = min($lastPage, $startPage + 2);
+            } else {
+                $endPage = $lastPage;
+                $startPage = max(1, $endPage - 2);
+            }
         @endphp
 
         @for($i = $startPage; $i <= $endPage; $i++)
