@@ -12,6 +12,10 @@
         <div class="error-messages">{{ session('error') }}</div>
     @endif
 
+    <div style="text-align: right; margin-bottom: 20px;">
+        <a href="{{ route('admin.products.create') }}" class="btn-add">商品登録</a>
+    </div>
+
     {{-- 検索フォーム --}}
     <div class="search-box">
         <h2>商品検索</h2>
@@ -81,8 +85,8 @@
                         </td>
                         <td class="col-date">{{ $product->created_at ? $product->created_at->format('Y-m-d H:i') : '-' }}</td>
                         <td class="col-action">
-                            <a href="#" class="btn-detail">詳細</a>
-                            <a href="#" class="btn-edit">編集</a>
+                            {{--<a href="{{ route('admin.products.show', $product->id) }}" class="btn-detail">詳細</a>--}}
+                            <a href="{{ route('admin.products.edit', $product->id) }}" class="btn-edit">編集</a>
                         </td>
                     </tr>
                 @empty
@@ -149,6 +153,20 @@
     margin-bottom: 20px;
     border-radius: 4px;
     text-align: center;
+}
+.btn-add {
+    background-color: #5dade2;
+    color: white;
+    padding: 10px 30px;
+    border-radius: 4px;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+.btn-add:hover {
+    background-color: #3498db;
 }
 .search-box {
     background: linear-gradient(to bottom, #fafafa, #f5f5f5);
@@ -393,6 +411,10 @@
     .btn-detail {
         padding: 4px 12px;
         font-size: 12px;
+    }
+    .btn-add {
+        padding: 8px 20px;
+        font-size: 13px;
     }
 }
 @media (max-width: 480px) {

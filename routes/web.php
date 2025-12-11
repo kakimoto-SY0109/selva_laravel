@@ -252,4 +252,32 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // 商品一覧
     Route::get('/products', [AdminProductController::class, 'index'])
         ->name('products.index');
+
+    // 商品関連
+    Route::get('/products', [AdminProductController::class, 'index'])
+        ->name('products.index');
+
+    Route::get('/products/create', [AdminProductController::class, 'create'])
+        ->name('products.create');
+
+    Route::get('/products/{id}/edit', [AdminProductController::class, 'edit'])
+        ->name('products.edit');
+
+    Route::post('/products/confirm', [AdminProductController::class, 'confirm'])
+        ->name('products.confirm');
+    
+    Route::post('/products/back', [AdminProductController::class, 'back'])
+        ->name('products.back');
+
+    Route::post('/products/store', [AdminProductController::class, 'store'])
+        ->name('products.store');
+
+    Route::post('/products/update', [AdminProductController::class, 'update'])
+        ->name('products.update');
+
+    Route::get('/products/subcategories/{categoryId}', [AdminProductController::class, 'getSubcategories'])
+        ->name('products.subcategories');
+
+    Route::post('/products/upload', [AdminProductController::class, 'uploadImage'])
+        ->name('products.upload');
 });
