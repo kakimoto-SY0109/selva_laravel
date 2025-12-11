@@ -110,8 +110,17 @@
         @php
             $currentPage = $products->currentPage();
             $lastPage = $products->lastPage();
-            $startPage = floor(($currentPage - 1) / 3) * 3 + 1;
-            $endPage = min($startPage + 2, $lastPage);
+        
+            // 次ページがあるかどうかで表示を決定
+            if ($currentPage < $lastPage) {
+                // 次ページがある場合：現在ページを中央に
+                $startPage = max(1, $currentPage - 1);
+                $endPage = min($lastPage, $startPage + 2);
+            } else {
+                // 最終ページの場合：最終ページを右端に
+                $endPage = $lastPage;
+                $startPage = max(1, $endPage - 2);
+            }
         @endphp
 
         @for($i = $startPage; $i <= $endPage; $i++)
