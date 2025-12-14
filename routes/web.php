@@ -15,6 +15,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminMemberController;
 use App\Http\Controllers\AdminProductCategoryController;
 use App\Http\Controllers\AdminProductController;
+use App\Http\Controllers\AdminReviewController;
 
 // トップページ
 Route::get('/member/top', [AuthController::class, 'top'])
@@ -284,8 +285,32 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // 商品削除
     Route::delete('/products/{id}', [AdminProductController::class, 'destroy'])
         ->name('products.destroy');
-    
-    // レビュー詳細
-    Route::get('/reviews/{id}', [AdminProductController::class, 'showReview'])
-        ->name('reviews.show');
+
+    // レビュー一覧
+    Route::get('/reviews', [AdminReviewController::class, 'index'])
+        ->name('reviews.index');
+
+    // レビュー登録
+    Route::get('/reviews/create', [AdminReviewController::class, 'create'])
+        ->name('reviews.create');
+
+    // レビュー編集
+    Route::get('/reviews/{id}/edit', [AdminReviewController::class, 'edit'])
+        ->name('reviews.edit');
+
+    // レビュー確認
+    Route::post('/reviews/confirm', [AdminReviewController::class, 'confirm'])
+        ->name('reviews.confirm');
+
+    // レビュー戻る
+    Route::post('/reviews/back', [AdminReviewController::class, 'back'])
+        ->name('reviews.back');
+
+    // レビュー登録実行
+    Route::post('/reviews/store', [AdminReviewController::class, 'store'])
+        ->name('reviews.store');
+
+    // レビュー更新実行
+    Route::post('/reviews/update', [AdminReviewController::class, 'update'])
+        ->name('reviews.update');
 });
