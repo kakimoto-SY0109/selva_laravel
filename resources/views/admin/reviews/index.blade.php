@@ -78,10 +78,14 @@
                         <td class="col-id">{{ $review->id }}</td>
                         <td class="col-product-id">{{ $review->product_id }}</td>
                         <td class="col-rating">{{ $review->evaluation }}</td>
-                        <td class="col-comment">{{ Str::limit($review->comment, 30) }}</td>
+                        <td class="col-comment">
+                            <a href="{{ route('admin.reviews.show', $review->id) }}" class="link">
+                                {{ Str::limit($review->comment, 30) }}
+                            </a>
+                        </td>
                         <td class="col-date">{{ $review->created_at ? $review->created_at->format('Y-m-d H:i') : '-' }}</td>
                         <td class="col-action">
-                            {{--<a href="{{ route('admin.reviews.show', $review->id) }}" class="btn-detail">詳細</a>--}}
+                            <a href="{{ route('admin.reviews.show', $review->id) }}" class="btn-detail">詳細</a>
                             <a href="{{ route('admin.reviews.edit', $review->id) }}" class="btn-edit">編集</a>
                         </td>
                     </tr>
@@ -391,6 +395,13 @@
 }
 .btn-add:hover {
     background-color: #3498db;
+}
+.link {
+    color: #5dade2;
+    text-decoration: none;
+}
+.link:hover {
+    text-decoration: underline;
 }
 @media (max-width: 768px) {
     .search-row {

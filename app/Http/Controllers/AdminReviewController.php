@@ -196,7 +196,29 @@ class AdminReviewController extends Controller
     public function show($id)
     {
         $review = Review::with(['member', 'product'])->findOrFail($id);
-    
-        return view('admin.reviews.show', compact('review'));
+
+        // 商品の総合評価
+        $averageRating = Review::where('product_id', $review->product_id)->avg('evaluation');
+        $averageRating = $averageRating ? ceil($averageRating) : 0;
+
+        return view('admin.reviews.show', compact('review', 'averageRating'));
+    }
+
+    /**
+     * 削除処理
+     */
+    public function destroy($id)
+    {
+        try {
+            $review = Review::findOrFail($id);
+            $review->delete();
+
+            return redirect()->route('admin.reviews.index')
+                ->with('success', '商品レビューを削除しました。');
+
+        } catch (\Exception $e) {
+            return redirect()->route('admin.reviews.index')
+            ->with('error', '削除処理中にエラーが発生しました。');
+        }
     }
 }

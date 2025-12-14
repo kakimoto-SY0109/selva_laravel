@@ -301,7 +301,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // レビュー詳細
     Route::get('/reviews/{id}', [AdminReviewController::class, 'show'])
         ->name('reviews.show');
-        
+
     // レビュー確認
     Route::post('/reviews/confirm', [AdminReviewController::class, 'confirm'])
         ->name('reviews.confirm');
@@ -317,4 +317,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // レビュー更新実行
     Route::post('/reviews/update', [AdminReviewController::class, 'update'])
         ->name('reviews.update');
+
+    // レビュー削除
+    Route::delete('/reviews/{id}', [AdminReviewController::class, 'destroy'])
+        ->name('reviews.destroy');
 });
