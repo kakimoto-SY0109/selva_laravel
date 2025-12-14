@@ -76,7 +76,11 @@
                 @forelse ($products as $product)
                     <tr>
                         <td class="col-id">{{ $product->id }}</td>
-                        <td class="col-name">{{ $product->name }}</td>
+                        <td class="col-name">
+                            <a href="{{ route('admin.products.show', $product->id) }}" class="product-link">
+                                {{ $product->name }}
+                            </a>
+                        </td>
                         <td class="col-category">
                             {{ $product->category->name ?? '-' }} / {{ $product->subcategory->name ?? '-' }}
                         </td>
@@ -85,7 +89,7 @@
                         </td>
                         <td class="col-date">{{ $product->created_at ? $product->created_at->format('Y-m-d H:i') : '-' }}</td>
                         <td class="col-action">
-                            {{--<a href="{{ route('admin.products.show', $product->id) }}" class="btn-detail">詳細</a>--}}
+                            <a href="{{ route('admin.products.show', $product->id) }}" class="btn-detail">詳細</a>
                             <a href="{{ route('admin.products.edit', $product->id) }}" class="btn-edit">編集</a>
                         </td>
                     </tr>
@@ -396,6 +400,14 @@
 }
 .btn-detail:hover {
     background-color: #7f8c8d;
+}
+.product-link {
+    color: #333;
+    text-decoration: none;
+}
+.product-link:hover {
+    color: #5dade2;
+    text-decoration: underline;
 }
 @media (max-width: 768px) {
     .search-row {

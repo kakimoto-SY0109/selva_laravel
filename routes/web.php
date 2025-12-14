@@ -249,10 +249,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::delete('/product-categories/{id}', [AdminProductCategoryController::class, 'destroy'])
         ->name('product_categories.destroy');
 
-    // 商品一覧
-    Route::get('/products', [AdminProductController::class, 'index'])
-        ->name('products.index');
-
     // 商品関連
     Route::get('/products', [AdminProductController::class, 'index'])
         ->name('products.index');
@@ -280,4 +276,16 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     Route::post('/products/upload', [AdminProductController::class, 'uploadImage'])
         ->name('products.upload');
+
+    // 商品詳細
+    Route::get('/products/{id}', [AdminProductController::class, 'show'])
+        ->name('products.show');
+
+    // 商品削除
+    Route::delete('/products/{id}', [AdminProductController::class, 'destroy'])
+        ->name('products.destroy');
+    
+    // レビュー詳細
+    Route::get('/reviews/{id}', [AdminProductController::class, 'showReview'])
+        ->name('reviews.show');
 });

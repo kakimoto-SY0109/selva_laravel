@@ -226,4 +226,57 @@ class AdminProductController extends Controller
             'url' => asset('storage/' . $path),
         ]);
     }
+
+    /**
+     * 詳細画面表示
+     */
+    public function show(Request $request, $id)
+    {
+        $product = Product::with(['category', 'subcategory', 'member'])->findOrFail($id);
+
+        // 総合評価
+        $averageRating = $product->reviews()->avg('evaluation');
+        $averageRating = $averageRating ? round($averageRating, 1) : 0;
+
+        // レビュー一覧 1ページ3件
+        $reviews = $product->reviews()
+        ->with('member')
+        ->orderByDesc('id')
+        ->paginate(3)
+        ->appends($request->query());
+
+        return view('admin.products.show', compact('product', 'reviews', 'averageRating'));
+    }
+
+    /**
+     * 削除処理
+     */
+    public function destroy($id)
+    {
+        try {
+            DB::transaction(function () use ($id) {
+                $product = Product::findOrFail($id);
+
+                $product->reviews()->delete();
+            
+                $product->delete();
+            });
+
+            return redirect()->route('admin.products.index')
+                ->with('success', '商品を削除しました。');
+
+        }catch (\Exception $e) {
+            return redirect()->route('admin.products.index')
+                ->with('error', '削除処理中にエラーが発生しました。');
+        }
+    }
+
+    /**
+     * レビュー詳細画面表示
+     */
+    public function showReview($id)
+    {
+        $review = \App\Models\Review::with(['member', 'product'])->findOrFail($id);
+        return view('admin.reviews.show', compact('review'));
+    }
 }
