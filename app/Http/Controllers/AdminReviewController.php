@@ -188,4 +188,15 @@ class AdminReviewController extends Controller
                 ->with('error', '更新処理中にエラーが発生しました。');
         }
     }
+
+    /**
+     * 詳細画面表示
+     */
+
+    public function show($id)
+    {
+        $review = Review::with(['member', 'product'])->findOrFail($id);
+    
+        return view('admin.reviews.show', compact('review'));
+    }
 }
