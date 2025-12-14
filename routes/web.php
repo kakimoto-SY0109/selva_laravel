@@ -298,6 +298,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/reviews/{id}/edit', [AdminReviewController::class, 'edit'])
         ->name('reviews.edit');
 
+    // レビュー詳細
+    Route::get('/reviews/{id}', [AdminReviewController::class, 'show'])
+        ->name('reviews.show');
+        
     // レビュー確認
     Route::post('/reviews/confirm', [AdminReviewController::class, 'confirm'])
         ->name('reviews.confirm');

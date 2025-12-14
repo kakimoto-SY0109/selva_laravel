@@ -270,13 +270,4 @@ class AdminProductController extends Controller
                 ->with('error', '削除処理中にエラーが発生しました。');
         }
     }
-
-    /**
-     * レビュー詳細画面表示
-     */
-    public function showReview($id)
-    {
-        $review = \App\Models\Review::with(['member', 'product'])->findOrFail($id);
-        return view('admin.reviews.show', compact('review'));
-    }
 }
